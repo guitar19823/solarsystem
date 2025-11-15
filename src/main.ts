@@ -1,21 +1,39 @@
-import { SolarSystem } from "./simulation/solar-system";
+import { PlatformAdapter } from "./types/platform-adapter";
 import { CanvasRenderer } from "./rendering/canvas-renderer";
+import { SolarSystem } from "./simulation/solar-system";
+import { SIMULATION_CONFIG } from "./config/simulation-config";
+import { BrowserAdapter } from "./adapters/browser-adapter";
 
-// Инициализация холста
-const canvas = document.createElement("canvas");
-canvas.width = 800;
-canvas.height = 800;
-document.body.appendChild(canvas);
+export function runSimulation(platformAdapter: PlatformAdapter) {
+  const canvas = platformAdapter.createCanvas();
+  const renderer = new CanvasRenderer(canvas, platformAdapter);
 
-const renderer = new CanvasRenderer(canvas);
-const system = new SolarSystem(86400); // шаг 1 день
+  platformAdapter.appendToDom(canvas);
 
-// Анимация
-function animate() {
-  system.step();
-  renderer.clear();
-  renderer.renderPlanets(system.getPlanets());
-  requestAnimationFrame(animate);
+  const system = new SolarSystem(SIMULATION_CONFIG.MAX_DT);
+
+  let lastTimestamp = 0;
+
+  function animate(currentTimestamp: number) {
+    const deltaTime = currentTimestamp - lastTimestamp;
+    lastTimestamp = currentTimestamp;
+    const deltaSeconds = deltaTime / 1000;
+
+    const simulationTimeStep = Math.min(
+      deltaSeconds * SIMULATION_CONFIG.SIMULATION_DT,
+      SIMULATION_CONFIG.MAX_DT
+    );
+
+    system.step(simulationTimeStep);
+    renderer.clear();
+    renderer.renderPlanets(system.getPlanets());
+
+    platformAdapter.requestAnimationFrame(animate);
+  }
+
+  platformAdapter.requestAnimationFrame(animate);
 }
 
-animate();
+const platformAdapter = new BrowserAdapter();
+
+runSimulation(platformAdapter);

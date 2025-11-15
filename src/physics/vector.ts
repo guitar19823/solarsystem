@@ -6,15 +6,15 @@ export interface Vector {
 export class Vector2D implements Vector {
   constructor(public x: number = 0, public y: number = 0) {}
 
-  add(v: Vector): Vector2D {
+  add(v: Vector) {
     return new Vector2D(this.x + v.x, this.y + v.y);
   }
 
-  multiply(scalar: number): Vector2D {
+  multiply(scalar: number) {
     return new Vector2D(this.x * scalar, this.y * scalar);
   }
 
-  magnitude(): number {
+  magnitude() {
     return Math.sqrt(this.x ** 2 + this.y ** 2);
   }
 }

@@ -1,17 +1,17 @@
 import { Planet } from "../entities/planet";
 import { PLANET_DATA } from "../config/planet-data";
+import { SIMULATION_CONFIG } from "../config/simulation-config";
 
 export class SolarSystem {
   private planets: Planet[] = [];
   private dt: number;
 
-  constructor(dt: number = 86400) {
+  constructor(dt: number = SIMULATION_CONFIG.DEFAULT_DT) {
     this.dt = dt;
     this.initPlanets();
   }
 
-  private initPlanets(): void {
-    // Создаём планеты на основе конфигурационных данных
+  private initPlanets() {
     for (const config of PLANET_DATA) {
       this.planets.push(
         new Planet(
@@ -26,14 +26,15 @@ export class SolarSystem {
     }
   }
 
-  getPlanets(): Planet[] {
+  getPlanets() {
     return this.planets;
   }
 
-  step(): void {
+  step(dt: number = this.dt) {
     const planetsCopy = [...this.planets];
+
     for (const planet of this.planets) {
-      planet.update(this.dt, planetsCopy);
+      planet.update(dt, planetsCopy);
     }
   }
 }
