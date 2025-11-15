@@ -1,5 +1,5 @@
 export const SIMULATION_CONFIG = {
-  SIMULATION_DT: 200000, // шаг симуляции (x реального времени)
+  SIMULATION_DT: 1, // шаг симуляции (x реального времени)
   DEFAULT_DT: 86400,
   MAX_DT: 864000, // макс. шаг симуляции (защита от фризов)
 

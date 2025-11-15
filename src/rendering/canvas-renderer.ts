@@ -72,7 +72,11 @@ export class CanvasRenderer {
       40
     );
 
-    this.ctx.fillText(`Масштаб: ${SIMULATION_CONFIG.SCALE_DIST} : 1`, 20, 60);
+    this.ctx.fillText(
+      `Масштаб: 1 : ${Math.trunc(1 / SIMULATION_CONFIG.SCALE_DIST)}`,
+      20,
+      60
+    );
   }
 
   private drawFps() {
